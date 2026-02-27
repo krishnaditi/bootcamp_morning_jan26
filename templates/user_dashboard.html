@@ -1,12 +1,358 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
-</head>
-<body>
-    <h1>Welcome to your Dashboard</h1>
-    <p>This is a simple user dashboard template.</p>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1>Welcome, {{ user.username }}!</h1>
+    
+    <div class="profile-card">
+        <h2>Your Profile</h2>
+        <div class="profile-info">
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Status:</strong> <span class="status-badge {{ user.status }}">{{ user.status }}</span></p>
+            <p><strong>Resume:</strong> 
+                {% if user.resume_filename %}
+                <span class="resume-status has-resume">📄 Uploaded</span>
+                <a href="{{ url_for('view_resume', user_id=user.id) }}" target="_blank" class="btn-link">View</a> |
+                <a href="{{ url_for('download_resume', user_id=user.id) }}" class="btn-link">Download</a>
+                {% else %}
+                <span class="resume-status no-resume">No resume uploaded</span>
+                {% endif %}
+            </p>
+        </div>
+        
+        <div class="profile-actions">
+            <a href="{{ url_for('edit_profile', user_id=user.id) }}" class="btn btn-edit">
+                ✏️ Edit Profile
+            </a>
+            <form action="{{ url_for('delete_profile', user_id=user.id) }}" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-delete">🗑️ Delete Account</button>
+            </form>
+            <form action="{{ url_for('close_profile', user_id=user.id) }}" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-close">🚪 Close Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Posts Search Section -->
+    <div class="posts-card">
+        <div class="posts-header">
+            <h2>📝 Your Posts</h2>
+            <a href="{{ url_for('create_post', user_id=user.id) }}" class="btn btn-create-post">➕ Create New Post</a>
+        </div>
+        {% if posts %}
+        <!-- All Posts List -->
+        <div class="posts-list">
+            <h3>All Your Posts ({{ posts|length }})</h3>
+            <div class="posts-table-container">
+                <table class="posts-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in posts %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('view_post', post_id=post.id) }}">{{ post.title }}</a>
+                            </td>
+                            <td>
+                                <span class="post-status-badge {{ post.status }}">{{ post.status }}</span>
+                            </td>
+                            <td class="post-actions">
+                                <a href="{{ url_for('edit_post', post_id=post.id) }}" class="btn btn-edit-post" title="Edit">✏️</a>
+                                
+                                {% if post.status == 'active' %}
+                                <form action="{{ url_for('close_post', post_id=post.id) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-close-post" title="Close Post">🔒</button>
+                                </form>
+                                {% else %}
+                                <form action="{{ url_for('reopen_post', post_id=post.id) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-reopen-post" title="Reopen Post">🔓</button>
+                                </form>
+                                {% endif %}
+                                
+                                <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-delete-post" title="Delete Post">🗑️</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <p class="no-posts">You haven't created any posts yet. Click "Create New Post" to get started!</p>
+        {% endif %}
+    </div>
+    
+    <div class="logout-section">
+        <a href="{{ url_for('home') }}" class="btn btn-logout">Logout</a>
+    </div>
+</div>
+
+<style>
+    .dashboard-container {
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+    .dashboard-container h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+    }
+    .profile-card, .posts-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .profile-card h2, .posts-card h2 {
+        color: #444;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .resume-status {
+        padding: 3px 10px;
+        border-radius: 15px;
+        font-size: 13px;
+    }
+    .resume-status.has-resume {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .resume-status.no-resume {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    .btn-link {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 14px;
+        margin-left: 5px;
+    }
+    .btn-link:hover {
+        text-decoration: underline;
+    }
+    .posts-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    .posts-header h2 {
+        margin-bottom: 0;
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    .btn-create-post {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+    .btn-create-post:hover {
+        background-color: #218838;
+    }
+    .profile-info p {
+        font-size: 16px;
+        margin: 10px 0;
+        color: #555;
+    }
+    .status-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        text-transform: capitalize;
+    }
+    .status-badge.accepted {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .status-badge.rejected {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    .status-badge.pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    .profile-actions {
+        margin-top: 30px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    .btn-edit {
+        background-color: #007bff;
+        color: white;
+    }
+    .btn-edit:hover {
+        background-color: #0056b3;
+    }
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+    }
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
+    .btn-close {
+        background-color: #ffc107;
+        color: #212529;
+    }
+    .btn-close:hover {
+        background-color: #e0a800;
+    }
+    .btn-view {
+        background-color: #17a2b8;
+        color: white;
+    }
+    .btn-view:hover {
+        background-color: #138496;
+    }
+    .logout-section {
+        text-align: center;
+        margin-top: 30px;
+    }
+    .btn-logout {
+        background-color: #6c757d;
+        color: white;
+    }
+    .btn-logout:hover {
+        background-color: #545b62;
+    }
+    /* Posts Section Styles */
+    .posts-list {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+    .posts-list h3 {
+        color: #555;
+        margin-bottom: 15px;
+    }
+    .posts-table-container {
+        overflow-x: auto;
+    }
+    .posts-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .posts-table th,
+    .posts-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+    .posts-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #333;
+    }
+    .posts-table tr:hover {
+        background-color: #f8f9fa;
+    }
+    .posts-table a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .posts-table a:hover {
+        text-decoration: underline;
+    }
+    .post-status-badge {
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: capitalize;
+    }
+    .post-status-badge.active {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .post-status-badge.closed {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    .post-actions {
+        white-space: nowrap;
+        display: flex;
+        gap: 5px;
+    }
+    .btn-edit-post,
+    .btn-close-post,
+    .btn-reopen-post,
+    .btn-delete-post {
+        padding: 6px 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    .btn-edit-post {
+        background-color: #007bff;
+        color: white;
+    }
+    .btn-edit-post:hover {
+        background-color: #0056b3;
+    }
+    .btn-close-post {
+        background-color: #ffc107;
+        color: #212529;
+    }
+    .btn-close-post:hover {
+        background-color: #e0a800;
+    }
+    .btn-reopen-post {
+        background-color: #28a745;
+        color: white;
+    }
+    .btn-reopen-post:hover {
+        background-color: #218838;
+    }
+    .btn-delete-post {
+        background-color: #dc3545;
+        color: white;
+    }
+    .btn-delete-post:hover {
+        background-color: #c82333;
+    }
+    .no-posts {
+        color: #888;
+        text-align: center;
+        font-style: italic;
+        padding: 20px;
+    }
+</style>
+{% endblock %}

@@ -1,21 +1,140 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-</head>
-<body>
-    <h1>Register</h1>
-    <form method="POST" action="/register">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <br>
+{% extends "base.html" %}
 
+{% block title %}Registration{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Register</h1>
+    <form method="POST" action="/register" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required minlength="6">
+        </div>
+        <div class="form-group">
+            <label for="confirm_password">Confirm Password:</label>
+            <input type="password" id="confirm_password" name="confirm_password" required minlength="6">
+        </div>
+        <div class="form-group">
+            <label for="resume">Upload Resume (PDF only, max 5MB):</label>
+            <input type="file" id="resume" name="resume" accept=".pdf">
+            <small class="form-hint">📄 Optional: Upload your resume in PDF format</small>
+        </div>
         <button type="submit">Register</button>
     </form>
-</body>
-</html>
+    <p class="form-link">Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+</div>
+
+<style>
+    .form-container {
+        max-width: 450px;
+        margin: 50px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .form-container h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 25px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+    .form-group input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0,123,255,0.3);
+    }
+    .file-upload-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        border: 2px dashed #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .file-upload-wrapper:hover {
+        border-color: #007bff;
+        background-color: #f0f7ff;
+    }
+    .file-upload-wrapper input[type="file"] {
+        width: auto;
+        padding: 0;
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+    .file-name {
+        color: #888;
+        font-size: 14px;
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .file-name.has-file {
+        color: #28a745;
+        font-weight: 500;
+    }
+    .form-hint {
+        display: block;
+        margin-top: 5px;
+        color: #888;
+        font-size: 12px;
+    }
+    button[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+    .form-link {
+        text-align: center;
+        margin-top: 20px;
+        color: #666;
+    }
+    .form-link a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .form-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Post{% endblock %}
+
+{% block content %}
+<div class="edit-post-container">
+    <div class="edit-post-card">
+        <h2>✏️ Edit Post</h2>
+        <form method="POST" action="{{ url_for('edit_post', post_id=post.id) }}">
+            <div class="form-group">
+                <label for="title">Post Title:</label>
+                <input type="text" id="title" name="title" value="{{ post.title }}" required>
+            </div>
+            <div class="form-group">
+                <label for="content">Post Content:</label>
+                <textarea id="content" name="content" rows="8" required>{{ post.content }}</textarea>
+            </div>
+            <div class="button-group">
+                <button type="submit" class="btn btn-save">💾 Save Changes</button>
+                <a href="{{ url_for('user_dashboard', username=user.username) }}" class="btn btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .edit-post-container {
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+    .edit-post-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 40px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .edit-post-card h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 15px;
+    }
+    .form-group {
+        margin-bottom: 25px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+        font-size: 16px;
+    }
+    .form-group input[type="text"] {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        box-sizing: border-box;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .form-group input[type="text"]:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        box-sizing: border-box;
+        resize: vertical;
+        min-height: 150px;
+        font-family: inherit;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
+    .button-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+    .btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    .btn-save {
+        background-color: #007bff;
+        color: white;
+    }
+    .btn-save:hover {
+        background-color: #0056b3;
+    }
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+    }
+    .btn-cancel:hover {
+        background-color: #545b62;
+    }
+</style>
+{% endblock %}

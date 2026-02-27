@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Create New Post{% endblock %}
+
+{% block content %}
+<div class="create-post-container">
+    <div class="create-post-card">
+        <h2>✍️ Create New Post</h2>
+        <form method="POST" action="{{ url_for('create_post', user_id=user.id) }}">
+            <div class="form-group">
+                <label for="title">Post Title:</label>
+                <input type="text" id="title" name="title" placeholder="Enter your post title" required>
+            </div>
+            <div class="form-group">
+                <label for="content">Post Content:</label>
+                <textarea id="content" name="content" rows="8" placeholder="Write your post content here..." required></textarea>
+            </div>
+            <div class="button-group">
+                <button type="submit" class="btn btn-create">📝 Create Post</button>
+                <a href="{{ url_for('user_dashboard', username=user.username) }}" class="btn btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .create-post-container {
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+    .create-post-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 40px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .create-post-card h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #28a745;
+        padding-bottom: 15px;
+    }
+    .form-group {
+        margin-bottom: 25px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+        font-size: 16px;
+    }
+    .form-group input[type="text"] {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        box-sizing: border-box;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .form-group input[type="text"]:focus {
+        outline: none;
+        border-color: #28a745;
+        box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+    }
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        box-sizing: border-box;
+        resize: vertical;
+        min-height: 150px;
+        font-family: inherit;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #28a745;
+        box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+    }
+    .button-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+    .btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    .btn-create {
+        background-color: #28a745;
+        color: white;
+    }
+    .btn-create:hover {
+        background-color: #218838;
+    }
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+    }
+    .btn-cancel:hover {
+        background-color: #545b62;
+    }
+</style>
+{% endblock %}

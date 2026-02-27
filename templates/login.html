@@ -1,20 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="form-container">
     <h1>Login</h1>
     <form method="POST" action="/login">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <br>
+        <div class="form-group">
+            <label for="login_type">Login As:</label>
+            <select id="login_type" name="login_type" required>
+                <option value="">-- Select Login Type --</option>
+                <option value="user">👤 User</option>
+                <option value="admin">🛡️ Admin</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
         <button type="submit">Login</button>
     </form>
-</body>
-</html>
+    <p class="form-link">Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+</div>
+
+<style>
+    .form-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .form-container h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 25px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+    }
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        box-sizing: border-box;
+        background-color: white;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0,123,255,0.3);
+    }
+    button[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    button[type="submit"]:hover {
+        background-color: #218838;
+    }
+    .form-link {
+        text-align: center;
+        margin-top: 20px;
+        color: #666;
+    }
+    .form-link a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .form-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
